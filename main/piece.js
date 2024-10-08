@@ -29,13 +29,12 @@ class Piece {
 
     
     move(p) {
-        console.table(board.grid);
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
             let newShape = this.shape;
             newShape.x = p.x;
             newShape.y = p.y;
-            if (this.collision(newShape) === true) {
+            if (this.collision(newShape) === false) {
                 this.x = p.x;
                 this.y = p.y; 
             }
@@ -58,7 +57,7 @@ class Piece {
                     groundedPieces.push({
                         x: this.x + x,
                         y: this.y + y,
-                        color: this.color
+                        color: this.color,
                     });
                 }
             });
@@ -89,20 +88,17 @@ class Piece {
     rotateCounterClockwise() {
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
-            let newShape = this.shape = this.shape[0]
-                .map((_, i) => this.shape.map(row => row[i]))
-                .reverse(); 
-
+            let newShape = this.shape[0]
+            .map((_, i) => this.shape.map(row => row[i])) // Transpose
+            .reverse();
+    
             if (this.collision(newShape) === false) {
-                this.shape = this.shape[0]
-                .map((_, i) => this.shape.map(row => row[i]))
-                .reverse();  
+                this.shape = newShape;
             }
-        } 
-        else {
+        } else {
             this.grounded = true;
             this.addToGroundedPieces();
-        } 
+        }
     }
 
     updateLowestY() {
@@ -118,32 +114,29 @@ class Piece {
     }
 
     collision(shape) {
+        // Loop through each block in the falling piece's shape
         for (let y = 0; y < shape.length; y++) {
-            let row = this.shape[y];  // Access each row
+            let row = shape[y];  // Access each row of the falling shape
             for (let x = 0; x < row.length; x++) {
-                if (row[x] > 0) {
-                    let blockX = shape.x + x;
-                    let blockY = shape.y + y;
-
-                    // For each grounded piece
+                if (row[x] > 0) {  // If there's a block in the falling piece
+                    let blockX = shape.x + x;  // Absolute X position of the block
+                    let blockY = shape.y + y;  // Absolute Y position of the block
+    
+                    // Loop through all grounded pieces to check for collisions
                     for (let i = 0; i < groundedPieces.length; i++) {
-                        // For each row
-                        for (let y = 0; y < groundedPieces.length; y++) {
-                            // For each index in the row
-                            let row = groundedPieces[y];  // Access each row
-                            for (let x = 0; x < row.length; x++) {
-                                let groundedX = groundedPieces[i].x + x;
-                                let groundedY = groundedPieces[i].y + y;
-
-                                if (blockX === groundedX && blockY === groundedY) {
-                                    return true;
-                                }
-                            }
-                        }    
+                        let groundedPiece = groundedPieces[i];  // Access grounded block
+                        let groundedBlockX = groundedPiece.x;  // Grounded block's X position
+                        let groundedBlockY = groundedPiece.y;  // Grounded block's Y position
+    
+                        // Check for a collision between the falling block and the grounded block
+                        if (blockX === groundedBlockX && blockY === groundedBlockY) {
+                            return true;  // Collision detected
+                        }
                     }
-                }  
+                }
             }
         }
-        return false;
+        return false;  // No collision detected
     }
+    
 }
