@@ -33,7 +33,6 @@ function draw() {
     
     if (board.piece.grounded === true) {
       board.piece = new Piece(ctx);
-      console.table(board.grid);
     }
 
     board.piece.draw();

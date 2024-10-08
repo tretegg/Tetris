@@ -29,10 +29,20 @@ class Piece {
 
     
     move(p) {
+        console.table(board.grid);
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
-            this.x = p.x;
-            this.y = p.y; 
+            let newShape = this.shape;
+            newShape.x = p.x;
+            newShape.y = p.y;
+            if (this.collision(newShape) === true) {
+                this.x = p.x;
+                this.y = p.y; 
+            }
+            else {
+                this.grounded = true;
+                this.addToGroundedPieces();
+            }
         } 
         else {
             this.grounded = true;
@@ -62,7 +72,7 @@ class Piece {
             let newShape = this.shape[0]
                 .map((_, i) => this.shape.map(row => row[i]))
                 .map(row => row.reverse());
-                
+
             if (this.collision(newShape) === false) {
                this.shape = this.shape[0]
                 .map((_, i) => this.shape.map(row => row[i]))
@@ -108,6 +118,32 @@ class Piece {
     }
 
     collision(shape) {
-        
+        for (let y = 0; y < shape.length; y++) {
+            let row = this.shape[y];  // Access each row
+            for (let x = 0; x < row.length; x++) {
+                if (row[x] > 0) {
+                    let blockX = shape.x + x;
+                    let blockY = shape.y + y;
+
+                    // For each grounded piece
+                    for (let i = 0; i < groundedPieces.length; i++) {
+                        // For each row
+                        for (let y = 0; y < groundedPieces.length; y++) {
+                            // For each index in the row
+                            let row = groundedPieces[y];  // Access each row
+                            for (let x = 0; x < row.length; x++) {
+                                let groundedX = groundedPieces[i].x + x;
+                                let groundedY = groundedPieces[i].y + y;
+
+                                if (blockX === groundedX && blockY === groundedY) {
+                                    return true;
+                                }
+                            }
+                        }    
+                    }
+                }  
+            }
+        }
+        return false;
     }
 }
