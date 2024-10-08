@@ -59,9 +59,16 @@ class Piece {
      rotateClockwise() {
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
-            this.shape = this.shape[0]
+            let newShape = this.shape[0]
                 .map((_, i) => this.shape.map(row => row[i]))
-                .map(row => row.reverse());   
+                .map(row => row.reverse());
+                
+            if (this.collision(newShape) === false) {
+               this.shape = this.shape[0]
+                .map((_, i) => this.shape.map(row => row[i]))
+                .map(row => row.reverse());    
+            }
+            
         } 
         else {
             this.grounded = true;
@@ -72,9 +79,15 @@ class Piece {
     rotateCounterClockwise() {
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
-            this.shape = this.shape[0]
+            let newShape = this.shape = this.shape[0]
+                .map((_, i) => this.shape.map(row => row[i]))
+                .reverse(); 
+
+            if (this.collision(newShape) === false) {
+                this.shape = this.shape[0]
                 .map((_, i) => this.shape.map(row => row[i]))
                 .reverse();  
+            }
         } 
         else {
             this.grounded = true;
@@ -83,7 +96,7 @@ class Piece {
     }
 
     updateLowestY() {
-        this.lowestY = this.shape.length;
+        this.lowestY = 0;
         for (let y = 0; y < this.shape.length; y++) {
             let row = this.shape[y];  // Access each row
             for (let x = 0; x < row.length; x++) {
@@ -92,5 +105,9 @@ class Piece {
                 }
             }
         }
+    }
+
+    collision(shape) {
+        
     }
 }
