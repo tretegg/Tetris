@@ -59,9 +59,12 @@ class Piece {
                         y: this.y + y,
                         color: this.color,
                     });
+                    groundedGrid[this.y + y][this.x + x] = 1;
                 }
             });
         });
+        console.table(groundedGrid);
+        this.checkLines();
     }
 
 
@@ -142,5 +145,53 @@ class Piece {
         }
         return false;  // No collision detected
     }
-    
-}
+
+
+    // Work on this
+    checkLines() { 
+        let linesCleared = 0;
+        for (let rowIndex = 0; rowIndex < groundedGrid.length; rowIndex++) {
+            let row = groundedGrid[rowIndex];
+            if (row.every(value => value === 1)) {
+            linesCleared++;
+
+            // Clear the line from the groundedGrid array
+            groundedGrid[rowIndex] = Array(COLS).fill(0);
+
+                for (let i = groundedPieces.length - 1; i >= 0; i--) {
+                    let groundedPiece = groundedPieces[i];
+                    let groundedBlockX = groundedPiece.x;
+                    let groundedBlockY = groundedPiece.y;
+              
+                  if (groundedBlockY === rowIndex) {
+                    ctx.clearRect(groundedBlockX, rowIndex, 1, 1);
+                    groundedPieces.splice(i, 1);
+                  }
+                }
+              }
+            
+                if (linesCleared > 0) {
+                  // Move the blocks down
+                  for (let i = 0; i < groundedPieces.length; i++) {
+                    let groundedPiece = groundedPieces[i];
+                    let groundedBlockY = groundedPiece.y;
+                
+                    if (groundedBlockY < rowIndex) {
+                      groundedPiece.y += linesCleared;
+                    }
+                  }
+                
+                  groundedGrid = Array(ROWS).fill(0).map(() => Array(COLS).fill(0));
+                  // Update the groundedGrid array
+                  for (let i = 0; i < groundedPieces.length; i++) {
+                    let groundedPiece = groundedPieces[i];
+                    let groundedBlockX = groundedPiece.x;
+                    let groundedBlockY = groundedPiece.y;
+                
+                    groundedGrid[groundedBlockY][groundedBlockX] = 1;
+                  }
+                }
+            }
+        }
+    }
+

@@ -3,6 +3,8 @@ const ctx = canvas.getContext('2d');
 
 let groundedPieces = [];
 
+let groundedGrid = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+
 let speed = 1000;
 
 let newPosition = {
@@ -19,8 +21,8 @@ ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 function play() {
     board = new Board(ctx);
     draw();
-    console.log('X:' + board.piece.x);
-    console.log('Y:' + board.piece.y);
+    // console.log('X:' + board.piece.x);
+    // console.log('Y:' + board.piece.y);
 }
 
 function draw() {
@@ -38,7 +40,6 @@ function draw() {
     }
 
     board.piece.draw();
-    console.table(board.grid);
 }
 
 const moves = {
@@ -67,17 +68,17 @@ document.addEventListener('keydown', event => {
                 board.piece.move(newPosition);
                 draw();
             }
-            console.log('X:' + board.piece.x);
-            console.log('Y:' + board.piece.y);
-            console.log('A key pressed');
+            // console.log('X:' + board.piece.x);
+            // console.log('Y:' + board.piece.y);
+            // console.log('A key pressed');
             break;
         case 's':
             newPosition = moves[S]({ x: board.piece.x, y: board.piece.y });
             board.piece.move(newPosition);
             draw();  
-            console.log('X:' + board.piece.x);
-            console.log('Y:' + board.piece.y);
-            console.log('S key pressed');
+            // console.log('X:' + board.piece.x);
+            // console.log('Y:' + board.piece.y);
+            // console.log('S key pressed');
             break;
         case 'd':
             newPosition = moves[D]({ x: board.piece.x, y: board.piece.y });
@@ -96,28 +97,28 @@ document.addEventListener('keydown', event => {
                 draw();  
                 board.piece.farthestRightX = -1;
             }
-            console.log('X:' + board.piece.x);
-            console.log('Y:' + board.piece.y);
-            console.log('D key pressed');
+            // console.log('X:' + board.piece.x);
+            // console.log('Y:' + board.piece.y);
+            // console.log('D key pressed');
             break;
         case 'ArrowLeft':
             event.preventDefault();
             board.piece.rotateCounterClockwise();
             draw();
-            console.log('X:' + board.piece.x);
-            console.log('Y:' + board.piece.y);
-            console.log('LeftArrow key pressed');
+            // console.log('X:' + board.piece.x);
+            // console.log('Y:' + board.piece.y);
+            // console.log('LeftArrow key pressed');
             break;
         case 'ArrowRight':
             event.preventDefault();
             board.piece.rotateClockwise();
             draw();
-            console.log('X:' + board.piece.x);
-            console.log('Y:' + board.piece.y);
-            console.log('RightArrow key pressed');
+            // console.log('X:' + board.piece.x);
+            // console.log('Y:' + board.piece.y);
+            // console.log('RightArrow key pressed');
             break;
         default:
-            console.log('Another key pressed');
+            // console.log('Another key pressed');
     }
 });
 
@@ -128,4 +129,4 @@ function lower_piece() {
 }
 
 setInterval(lower_piece, speed);
-//setInterval(checkLines, speed);
+
