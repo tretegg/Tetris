@@ -180,16 +180,16 @@ class Piece {
                       groundedPiece.y += linesCleared;
                     }
                   }
-                
                   groundedGrid = Array(ROWS).fill(0).map(() => Array(COLS).fill(0));
-                  // Update the groundedGrid array
-                  for (let i = 0; i < groundedPieces.length; i++) {
-                    let groundedPiece = groundedPieces[i];
-                    let groundedBlockX = groundedPiece.x;
-                    let groundedBlockY = groundedPiece.y;
-                
-                    groundedGrid[groundedBlockY][groundedBlockX] = 1;
-                  }
+                }
+            }
+            if (linesCleared > 0) {
+                for (let i = 0; i < groundedPieces.length; i++) {
+                        let groundedPiece = groundedPieces[i];
+                        let groundedBlockX = groundedPiece.x;
+                        let groundedBlockY = groundedPiece.y;
+                    
+                        groundedGrid[groundedBlockY][groundedBlockX] = 1;
                 }
             }
         }
