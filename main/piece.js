@@ -38,7 +38,7 @@ class Piece {
                 this.x = p.x;
                 this.y = p.y; 
             }
-            else {
+            else if (p.x === this.x) {
                 this.grounded = true;
                 this.addToGroundedPieces();
             }
@@ -71,13 +71,14 @@ class Piece {
             let newShape = this.shape[0]
                 .map((_, i) => this.shape.map(row => row[i]))
                 .map(row => row.reverse());
+            newShape.x = this.x;
+            newShape.y = this.y;
 
             if (this.collision(newShape) === false) {
                this.shape = this.shape[0]
                 .map((_, i) => this.shape.map(row => row[i]))
                 .map(row => row.reverse());    
             }
-            
         } 
         else {
             this.grounded = true;
@@ -89,8 +90,10 @@ class Piece {
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
             let newShape = this.shape[0]
-            .map((_, i) => this.shape.map(row => row[i])) // Transpose
-            .reverse();
+                .map((_, i) => this.shape.map(row => row[i])) // Transpose
+                .reverse();
+            newShape.x = this.x;
+            newShape.y = this.y;
     
             if (this.collision(newShape) === false) {
                 this.shape = newShape;
@@ -112,6 +115,7 @@ class Piece {
             }
         }
     }
+
 
     collision(shape) {
         // Loop through each block in the falling piece's shape
