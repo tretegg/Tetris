@@ -3,6 +3,8 @@ const ctx = canvas.getContext('2d');
 
 let groundedPieces = [];
 
+let speed = 1000;
+
 let newPosition = {
     x: 0,
     y: 0
@@ -36,6 +38,7 @@ function draw() {
     }
 
     board.piece.draw();
+    console.table(board.grid);
 }
 
 const moves = {
@@ -124,5 +127,5 @@ function lower_piece() {
     draw();
 }
 
-
-setInterval(lower_piece, 1000);
+setInterval(lower_piece, speed);
+//setInterval(checkLines, speed);
