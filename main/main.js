@@ -49,9 +49,17 @@ function draw() {
     
     if (board.piece.grounded === true) {
       board.piece = new Piece(ctx);
+      if (board.piece.collision(board.piece.shape) === true) {
+        endGame();
+      }
     }
 
     board.piece.draw();
+}
+
+// TODO: Add a function to check if the game is over
+endGame () {
+    console.log('game over');
 }
 
 const moves = {
