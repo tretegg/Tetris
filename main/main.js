@@ -5,6 +5,10 @@ let groundedPieces = [];
 
 let groundedGrid = Array.from({length: ROWS}, () => Array(COLS).fill(0));
 
+let level = 1;
+let score = 0;
+let totalLines = 0;
+
 let speed = 1000;
 
 let newPosition = {
@@ -18,13 +22,21 @@ ctx.canvas.height = ROWS * BLOCK_SIZE;
 
 ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
+/**
+ * Start a new game of Tetris by creating a new Board object and drawing
+ * the initial game state on the canvas.
+ */
 function play() {
     board = new Board(ctx);
     draw();
-    // console.log('X:' + board.piece.x);
-    // console.log('Y:' + board.piece.y);
 }
 
+/**
+ * Draw the current game state on the canvas. This includes clearing the
+ * canvas, drawing all grounded blocks, and drawing the current falling
+ * piece. If the current falling piece is grounded, create a new falling
+ * piece.
+ */
 function draw() {
     const { width, height } = ctx.canvas;
     ctx.clearRect(0, 0, width, height);
@@ -68,17 +80,11 @@ document.addEventListener('keydown', event => {
                 board.piece.move(newPosition);
                 draw();
             }
-            // console.log('X:' + board.piece.x);
-            // console.log('Y:' + board.piece.y);
-            // console.log('A key pressed');
             break;
         case 's':
             newPosition = moves[S]({ x: board.piece.x, y: board.piece.y });
             board.piece.move(newPosition);
             draw();  
-            // console.log('X:' + board.piece.x);
-            // console.log('Y:' + board.piece.y);
-            // console.log('S key pressed');
             break;
         case 'd':
             newPosition = moves[D]({ x: board.piece.x, y: board.piece.y });
@@ -97,31 +103,56 @@ document.addEventListener('keydown', event => {
                 draw();  
                 board.piece.farthestRightX = -1;
             }
-            // console.log('X:' + board.piece.x);
-            // console.log('Y:' + board.piece.y);
-            // console.log('D key pressed');
             break;
         case 'ArrowLeft':
             event.preventDefault();
             board.piece.rotateCounterClockwise();
             draw();
-            // console.log('X:' + board.piece.x);
-            // console.log('Y:' + board.piece.y);
-            // console.log('LeftArrow key pressed');
             break;
         case 'ArrowRight':
             event.preventDefault();
             board.piece.rotateClockwise();
             draw();
-            // console.log('X:' + board.piece.x);
-            // console.log('Y:' + board.piece.y);
-            // console.log('RightArrow key pressed');
             break;
         default:
-            // console.log('Another key pressed');
     }
 });
 
+/**
+ * Update the score and level after a piece has been added to the
+ * grounded pieces. The score is increased by 100, 300, 500, or 800
+ * depending on the number of lines cleared. The level increases by
+ * one for every 10 lines cleared. The speed is updated to reflect
+ * the new level.
+ * @param {number} linesCleared - The number of lines cleared.
+ */
+function updateScore(linesCleared) {
+    if (linesCleared === 1) {
+        score += 100 * level;
+    }
+    else if (linesCleared === 2) {
+        score += 300 * level;
+    }
+    else if (linesCleared === 3) {
+        score += 500 * level;
+    }
+    else if (linesCleared === 4) {
+        score += 800 * level;
+    }
+    totalLines += linesCleared;
+    level = Math.floor(totalLines / 10) + 1;
+    speed = 1000 + level * 100;
+    document.getElementById('score').innerHTML = score;
+    document.getElementById('level').innerHTML = level;
+    document.getElementById('lines').innerHTML = totalLines;
+}
+
+/**
+ * Move the falling piece down by one block. This is done by calling the
+ * move() method of the piece with a new position that is one block down
+ * from the current position. The draw() method is then called to update
+ * the canvas.
+ */
 function lower_piece() {
     newPosition = moves[S]({ x: board.piece.x, y: board.piece.y });
     board.piece.move(newPosition);

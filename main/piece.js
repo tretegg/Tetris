@@ -1,12 +1,17 @@
 class Piece {
+    /**
+     * Constructor for the Piece class.
+     * @param {Object} ctx - The canvas context to draw on.
+     */
     constructor(ctx) {
         this.ctx = ctx;
 
+        // starting shape
         this.shape_num = Math.floor(Math.random() * 6);
         this.shape = SHAPES[this.shape_num];
         this.color = COLORS[this.shape_num];
 
-          // starting position
+        // starting position
         this.x = 3;
         this.y = 0;
 
@@ -15,7 +20,10 @@ class Piece {
         this.lowestY = 0;
         this.grounded = false;
     }
-
+    
+    /**
+     * Draw the piece on the canvas at its current position.
+     */
     draw() {
         this.ctx.fillStyle = this.color;
         this.shape.forEach((row, y) => {
@@ -28,6 +36,13 @@ class Piece {
     }      
 
     
+    /**
+     * Move the piece to the given position, but only if it will not collide
+     * with the grid or any grounded pieces. 
+     * Can also move left or right before being added to the grounded pieces.
+     * @param {Object} p - The new position of the piece, as an object with
+     *                     x and y properties.
+     */
     move(p) {
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
@@ -43,12 +58,27 @@ class Piece {
                 this.addToGroundedPieces();
             }
         } 
+        else if (p.x != this.x) {
+            let newShape = this.shape;
+            newShape.x = p.x;
+            newShape.y = p.y;
+            if (this.collision(newShape) === false) {
+                this.x = p.x;
+            }
+            this.grounded = true;
+            this.addToGroundedPieces();
+        }
         else {
             this.grounded = true;
             this.addToGroundedPieces();
         } 
     }
 
+    /**
+     * Store each block's position and color when grounded in the groundedPieces
+     * array and the groundedGrid matrix. Then call checkLines() to check for
+     * lines cleared and update the score.
+     */
     addToGroundedPieces() {
         // Store each block's position and color when grounded
         this.shape.forEach((row, y) => {
@@ -68,6 +98,10 @@ class Piece {
     }
 
 
+    /**
+     * Rotate the piece clockwise by 90 degrees if it will not collide with
+     * the grid or any grounded pieces. 
+     */
      rotateClockwise() {
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
@@ -89,6 +123,10 @@ class Piece {
         } 
     }
 
+    /**
+     * Rotate the piece counter-clockwise by 90 degrees if it will not collide
+     * with the grid or any grounded pieces. 
+     */
     rotateCounterClockwise() {
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
@@ -107,6 +145,10 @@ class Piece {
         }
     }
 
+    /**
+     * Update the lowestY property of the piece, which is the lowest row index
+     * of any block in the piece's shape.
+     */
     updateLowestY() {
         this.lowestY = 0;
         for (let y = 0; y < this.shape.length; y++) {
@@ -120,6 +162,12 @@ class Piece {
     }
 
 
+    /**
+     * Check if the given shape collides with any grounded pieces or the grid.
+     * @param {Object} shape - The shape of the falling piece, with properties
+     *                        'x' and 'y' for the top-left corner of the shape.
+     * @returns {boolean} True if a collision is detected, false otherwise.
+     */
     collision(shape) {
         // Loop through each block in the falling piece's shape
         for (let y = 0; y < shape.length; y++) {
@@ -148,6 +196,13 @@ class Piece {
 
 
 
+    /**
+     * Check each row of the groundedGrid for lines cleared. If a line is cleared,
+     * increment the linesCleared counter and remove the blocks from the
+     * groundedPieces array. Call lowerBlocks() to move any blocks above the
+     * cleared line down. Finally, call refreshGrid() and updateScore() to
+     * update the score and refresh the grid.
+     */
     checkLines() { 
         let linesCleared = 0;
         let topRowCleared = 0;
@@ -166,8 +221,17 @@ class Piece {
         
         this.lowerBlocks(linesCleared, topRowCleared);
         this.refreshGrid();
+        updateScore(linesCleared);
     }
 
+    /**
+     * Move any blocks above the cleared line down by the number of lines
+     * cleared. This is done by iterating over the groundedPieces array and
+     * checking if the block's Y position is less than the cleared row index.
+     * If so, increment the block's Y position by the number of lines cleared.
+     * @param {number} linesCleared - The number of lines cleared.
+     * @param {number} rowIndex - The index of the cleared row.
+     */
     lowerBlocks(linesCleared, rowIndex) {
         if (linesCleared > 0) {
             // Move the blocks down
@@ -182,6 +246,12 @@ class Piece {
           }
     }
 
+    /**
+     * Reset the groundedGrid matrix and re-populate it with the positions
+     * of all blocks in the groundedPieces array. This is done by iterating
+     * over the groundedPieces array and setting the corresponding position
+     * in the groundedGrid matrix to 1.
+     */
     refreshGrid() {
         groundedGrid = Array(ROWS).fill(0).map(() => Array(COLS).fill(0));
         for (let i = 0; i < groundedPieces.length; i++) {
