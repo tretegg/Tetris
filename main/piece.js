@@ -147,51 +147,50 @@ class Piece {
     }
 
 
-    // Work on this
+
     checkLines() { 
         let linesCleared = 0;
+        let topRowCleared = 0;
         for (let rowIndex = 0; rowIndex < groundedGrid.length; rowIndex++) {
             let row = groundedGrid[rowIndex];
             if (row.every(value => value === 1)) {
             linesCleared++;
 
-            // Clear the line from the groundedGrid array
-            groundedGrid[rowIndex] = Array(COLS).fill(0);
+            // Clear the blocks from the groundedPieces array
+            groundedPieces = groundedPieces.filter(piece => piece.y !== rowIndex);
+            }
+            if (rowIndex > topRowCleared) {
+                topRowCleared = rowIndex;
+            } 
+        }
+        
+        this.lowerBlocks(linesCleared, topRowCleared);
+        this.refreshGrid();
+    }
 
-                for (let i = groundedPieces.length - 1; i >= 0; i--) {
-                    let groundedPiece = groundedPieces[i];
-                    let groundedBlockX = groundedPiece.x;
-                    let groundedBlockY = groundedPiece.y;
-              
-                  if (groundedBlockY === rowIndex) {
-                    ctx.clearRect(groundedBlockX, rowIndex, 1, 1);
-                    groundedPieces.splice(i, 1);
-                  }
-                }
+    lowerBlocks(linesCleared, rowIndex) {
+        if (linesCleared > 0) {
+            // Move the blocks down
+            for (let i = 0; i < groundedPieces.length; i++) {
+              let groundedPiece = groundedPieces[i];
+              let groundedBlockY = groundedPiece.y;
+          
+              if (groundedBlockY < rowIndex) {
+                groundedPiece.y += linesCleared;
               }
-            
-                if (linesCleared > 0) {
-                  // Move the blocks down
-                  for (let i = 0; i < groundedPieces.length; i++) {
-                    let groundedPiece = groundedPieces[i];
-                    let groundedBlockY = groundedPiece.y;
-                
-                    if (groundedBlockY < rowIndex) {
-                      groundedPiece.y += linesCleared;
-                    }
-                  }
-                  groundedGrid = Array(ROWS).fill(0).map(() => Array(COLS).fill(0));
-                }
             }
-            if (linesCleared > 0) {
-                for (let i = 0; i < groundedPieces.length; i++) {
-                        let groundedPiece = groundedPieces[i];
-                        let groundedBlockX = groundedPiece.x;
-                        let groundedBlockY = groundedPiece.y;
-                    
-                        groundedGrid[groundedBlockY][groundedBlockX] = 1;
-                }
-            }
+          }
+    }
+
+    refreshGrid() {
+        groundedGrid = Array(ROWS).fill(0).map(() => Array(COLS).fill(0));
+        for (let i = 0; i < groundedPieces.length; i++) {
+            let groundedPiece = groundedPieces[i];
+            let groundedBlockX = groundedPiece.x;
+            let groundedBlockY = groundedPiece.y;
+        
+            groundedGrid[groundedBlockY][groundedBlockX] = 1;
         }
     }
+}
 
