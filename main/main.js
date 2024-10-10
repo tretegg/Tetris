@@ -58,7 +58,7 @@ function draw() {
 }
 
 // TODO: Add a function to check if the game is over
-endGame () {
+function endGame () {
     console.log('game over');
 }
 
