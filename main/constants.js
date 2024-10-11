@@ -37,7 +37,12 @@ const SHAPES = [
         [0, 0, 1],   
         [1, 1, 1],
         [0, 0, 0]
+    ],
+    [  
+        [1, 1, 0],   
+        [0, 1, 1],
+        [0, 0, 0]
     ]
 ];
 
-const COLORS = ['purple', 'yellow', 'blue', 'lightblue', 'red', 'orange'];
+const COLORS = ['purple', 'yellow', 'blue', 'lightblue', 'red', 'orange', 'green'];
