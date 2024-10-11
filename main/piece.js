@@ -204,52 +204,57 @@ class Piece {
      */
     checkLines() { 
         let linesCleared = 0;
-        let topRowCleared = 0;
+        let clearedRows = [];
         for (let rowIndex = 0; rowIndex < groundedGrid.length; rowIndex++) {
             let row = groundedGrid[rowIndex];
             if (row.every(value => value === 1)) {
-            linesCleared++;
+                linesCleared++;
 
-            // Clear the blocks from the groundedPieces array
-            groundedPieces = groundedPieces.filter(piece => piece.y !== rowIndex);
+                // Clear the blocks from the groundedPieces array
+                groundedPieces = groundedPieces.filter(piece => piece.y !== rowIndex);
+
+                // Add the cleared row to the clearedRows array
+                clearedRows.push(rowIndex);
             }
-            if (rowIndex > topRowCleared) {
-                topRowCleared = rowIndex;
-            } 
+
         }
         
-        this.lowerBlocks(linesCleared, topRowCleared);
+        this.lowerBlocks(linesCleared, clearedRows); 
         this.refreshGrid();
         updateScore(linesCleared);
     }
 
+    
     /**
-     * Move any blocks above the cleared line down by the number of lines
+     * Move any blocks above the cleared lines down by the number of lines
      * cleared. This is done by iterating over the groundedPieces array and
-     * checking if the block's Y position is less than the cleared row index.
-     * If so, increment the block's Y position by the number of lines cleared.
+     * incrementing the y index of each block by the number of lines cleared
+     * until it passes the cleared line. The blocks are moved down by the
+     * number of cleared lines.
      * @param {number} linesCleared - The number of lines cleared.
-     * @param {number} rowIndex - The index of the cleared row.
+     * @param {number[]} clearedRows - The row indices of the cleared lines.
      */
-    lowerBlocks(linesCleared, rowIndex) {
+    lowerBlocks(linesCleared, clearedRows) {
         if (linesCleared > 0) {
             // Move the blocks down
             for (let i = 0; i < groundedPieces.length; i++) {
               let groundedPiece = groundedPieces[i];
               let groundedBlockY = groundedPiece.y;
-          
-              if (groundedBlockY < rowIndex) {
-                groundedPiece.y += linesCleared;
+            
+              innerLoop:
+              for (let r = 0; r < linesCleared.length; r++) {
+                if (groundedBlockY < clearedRows[r]) {
+                    groundedPiece.y += linesCleared + r;
+                    break innerLoop;
+                }
               }
             }
-          }
+        }   
     }
-
+    
     /**
-     * Reset the groundedGrid matrix and re-populate it with the positions
-     * of all blocks in the groundedPieces array. This is done by iterating
-     * over the groundedPieces array and setting the corresponding position
-     * in the groundedGrid matrix to 1.
+     * Rebuild the groundedGrid matrix by iterating over the groundedPieces
+     * array and setting the corresponding elements in the matrix to 1.
      */
     refreshGrid() {
         groundedGrid = Array(ROWS).fill(0).map(() => Array(COLS).fill(0));
@@ -260,8 +265,7 @@ class Piece {
 
             if (groundedBlockY >= 0 && groundedBlockY < ROWS && groundedBlockX >= 0 && groundedBlockX < COLS) {
                 groundedGrid[groundedBlockY][groundedBlockX] = 1;
-            }
+            }   
         }
     }
 }
-
