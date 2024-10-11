@@ -7,7 +7,7 @@ class Piece {
         this.ctx = ctx;
 
         // starting shape
-        this.shape_num = selectPieceFromBag(bag);
+        this.shape_num = selectPieceFromBag();
         this.shape = SHAPES[this.shape_num];
         this.color = COLORS[this.shape_num];
 
@@ -93,7 +93,6 @@ class Piece {
                 }
             });
         });
-        console.table(groundedGrid);
         this.checkLines();
     }
 
@@ -258,8 +257,10 @@ class Piece {
             let groundedPiece = groundedPieces[i];
             let groundedBlockX = groundedPiece.x;
             let groundedBlockY = groundedPiece.y;
-        
-            groundedGrid[groundedBlockY][groundedBlockX] = 1;
+
+            if (groundedBlockY >= 0 && groundedBlockY < ROWS && groundedBlockX >= 0 && groundedBlockX < COLS) {
+                groundedGrid[groundedBlockY][groundedBlockX] = 1;
+            }
         }
     }
 }

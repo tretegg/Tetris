@@ -159,33 +159,26 @@ function updateScore(linesCleared) {
 
 /**
  * Select a random piece from the given bag of pieces. If the bag is empty,
- * replenish it with all 7 possible pieces. If the bag is not already shuffled,
- * shuffle it. Then select a random piece from the bag and remove it. Return
- * the index of the selected piece.
+ * replenish it with all 7 possible pieces. Then select a random piece from 
+ * the bag and remove it. Return the index of the selected piece.
  * @param {array<number>} bag - An array of numbers, each representing a
  *                              different Tetris piece.
  * @returns {number} The index of the selected piece.
  */
-function selectPieceFromBag(bag) {
+function selectPieceFromBag() {
+    console.log(bag);
     if (bag.length === 0) {
         bag = [0, 1, 2, 3, 4, 5, 6];
-    }
-    // Shuffle the bag if it's not already shuffled
-    if (!bag.shuffled) {
-      bag.shuffled = true;
-      for (let i = bag.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [bag[i], bag[j]] = [bag[j], bag[i]];
-      }
     }
   
     // Select a random piece from the bag
     const selectedPieceIndex = Math.floor(Math.random() * bag.length);
+    const selectedPiece = bag[selectedPieceIndex];  
   
     // Remove the selected piece from the bag
     bag.splice(selectedPieceIndex, 1);
 
-    return selectedPieceIndex;
+    return selectedPiece;
   }
 
 /**
