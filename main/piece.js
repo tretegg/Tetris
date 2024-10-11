@@ -7,7 +7,7 @@ class Piece {
         this.ctx = ctx;
 
         // starting shape
-        this.shape_num = Math.floor(Math.random() * 6);
+        this.shape_num = selectPieceFromBag(bag);
         this.shape = SHAPES[this.shape_num];
         this.color = COLORS[this.shape_num];
 

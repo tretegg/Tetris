@@ -5,6 +5,8 @@ let groundedPieces = [];
 
 let groundedGrid = Array.from({length: ROWS}, () => Array(COLS).fill(0));
 
+let bag = [0, 1, 2, 3, 4, 5, 6];
+
 let level = 1;
 let score = 0;
 let totalLines = 0;
@@ -154,6 +156,37 @@ function updateScore(linesCleared) {
     document.getElementById('level').innerHTML = level;
     document.getElementById('lines').innerHTML = totalLines;
 }
+
+/**
+ * Select a random piece from the given bag of pieces. If the bag is empty,
+ * replenish it with all 7 possible pieces. If the bag is not already shuffled,
+ * shuffle it. Then select a random piece from the bag and remove it. Return
+ * the index of the selected piece.
+ * @param {array<number>} bag - An array of numbers, each representing a
+ *                              different Tetris piece.
+ * @returns {number} The index of the selected piece.
+ */
+function selectPieceFromBag(bag) {
+    if (bag.length === 0) {
+        bag = [0, 1, 2, 3, 4, 5, 6];
+    }
+    // Shuffle the bag if it's not already shuffled
+    if (!bag.shuffled) {
+      bag.shuffled = true;
+      for (let i = bag.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [bag[i], bag[j]] = [bag[j], bag[i]];
+      }
+    }
+  
+    // Select a random piece from the bag
+    const selectedPieceIndex = Math.floor(Math.random() * bag.length);
+  
+    // Remove the selected piece from the bag
+    bag.splice(selectedPieceIndex, 1);
+
+    return selectedPieceIndex;
+  }
 
 /**
  * Move the falling piece down by one block. This is done by calling the
