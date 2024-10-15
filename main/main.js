@@ -31,6 +31,8 @@ ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 function play() {
     board = new Board(ctx);
     draw();
+
+    
 }
 
 /**
@@ -51,9 +53,6 @@ function draw() {
     
     if (board.piece.grounded === true) {
       board.piece = new Piece(ctx);
-      if (board.piece.collision(board.piece.shape) === true) {
-        endGame();
-      }
     }
 
     board.piece.draw();
@@ -62,6 +61,7 @@ function draw() {
 // TODO: Add a function to check if the game is over
 function endGame () {
     console.log('game over');
+    play();
 }
 
 const moves = {
@@ -166,7 +166,6 @@ function updateScore(linesCleared) {
  * @returns {number} The index of the selected piece.
  */
 function selectPieceFromBag() {
-    console.log(bag);
     if (bag.length === 0) {
         bag = [0, 1, 2, 3, 4, 5, 6];
     }
@@ -179,7 +178,7 @@ function selectPieceFromBag() {
     bag.splice(selectedPieceIndex, 1);
 
     return selectedPiece;
-  }
+}
 
 /**
  * Move the falling piece down by one block. This is done by calling the

@@ -15,6 +15,7 @@ class Piece {
         this.x = 3;
         this.y = 0;
 
+
         this.farthestRightX = -1;
         this.farthestLeftX = 3;
         this.lowestY = 0;
@@ -184,6 +185,9 @@ class Piece {
     
                         // Check for a collision between the falling block and the grounded block
                         if (blockX === groundedBlockX && blockY === groundedBlockY) {
+                            if (groundedBlockY === 0) {
+                                endGame();
+                            }
                             return true;  // Collision detected
                         }
                     }
