@@ -16,8 +16,8 @@ class WebsocketHandler {
         "GAME_FULL": (data: any) => {
             this.passDataToSubscribers("GAME_FULL", data);
         },
-        "PEICE_PLACE": (data: any) => {
-            this.passDataToSubscribers("PEICE_PLACE", data);
+        "PIECE_PLACE": (data: any) => {
+            this.passDataToSubscribers("PIECE_PLACE", data);
         },
         "GAME_START": (data: any) => {
             this.passDataToSubscribers("GAME_START", data);
@@ -49,7 +49,7 @@ class WebsocketHandler {
             "GAME_END": {},
             "GAME_FULL": {},
             "GAME_START": {},
-            "PEICE_PLACE": {},
+            "PIECE_PLACE": {},
             "OPPONENT_PIECE_PLACE": {},
             "ERROR": {},
             "INIT": {}

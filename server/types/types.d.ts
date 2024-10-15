@@ -1,7 +1,7 @@
 /**
  * Data types for data going Server -> Client
  */
-export type ServerEventDataTypes = "ERROR" | "GAME_FULL" | "PEICE_PLACE" | "GAME_START" | "GAME_END" | "OPPONENT_PIECE_PLACE" | "INIT"
+export type ServerEventDataTypes = "ERROR" | "GAME_FULL" | "PIECE_PLACE" | "GAME_START" | "GAME_END" | "OPPONENT_PIECE_PLACE" | "INIT"
 /**
  * Data types for data going Client -> Server
  */

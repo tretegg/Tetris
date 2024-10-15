@@ -128,6 +128,12 @@ document.addEventListener('keydown', event => {
     }
 });
 
+document.addEventListener('keydown', (e) => {
+    if (e.key === ' ' && e.target === document.getElementById('play-button')) {
+      e.preventDefault();
+    }
+  });
+
 /**
  * Update the score and level after a piece has been added to the
  * grounded pieces. The score is increased by 100, 300, 500, or 800
@@ -151,7 +157,7 @@ function updateScore(linesCleared) {
     }
     totalLines += linesCleared;
     level = Math.floor(totalLines / 10) + 1;
-    speed = 1000 + level * 100;
+    speed = 1000 - level * 30;
     document.getElementById('score').innerHTML = score;
     document.getElementById('level').innerHTML = level;
     document.getElementById('lines').innerHTML = totalLines;
