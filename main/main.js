@@ -124,12 +124,21 @@ document.addEventListener('keydown', event => {
             board.piece.rotateClockwise();
             draw();
             break;
+        case ' ':
+            while (board.piece.grounded === false && board.piece.y != 0) {
+                newPosition = moves[S]({ x: board.piece.x, y: board.piece.y });
+                board.piece.move(newPosition);
+            }
+            draw();
+            break;
         default:
     }
 });
 
+// Prevent spacebar from pressing button
+// Not working
 document.addEventListener('keydown', (e) => {
-    if (e.key === ' ' && e.target === document.getElementById('play-button')) {
+    if (e.code === 'Space' && e.target === document.getElementById('play-button')) {
       e.preventDefault();
     }
   });
