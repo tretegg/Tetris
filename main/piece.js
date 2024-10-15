@@ -225,29 +225,23 @@ class Piece {
     }
 
     
+    
     /**
-     * Move any blocks above the cleared lines down by the number of lines
-     * cleared. This is done by iterating over the groundedPieces array and
-     * incrementing the y index of each block by the number of lines cleared
-     * until it passes the cleared line. The blocks are moved down by the
-     * number of cleared lines.
+     * Move all blocks above the cleared lines down by the number of cleared lines.
      * @param {number} linesCleared - The number of lines cleared.
-     * @param {number[]} clearedRows - The row indices of the cleared lines.
+     * @param {Array<number>} clearedRows - An array of row indices of the cleared lines.
      */
     lowerBlocks(linesCleared, clearedRows) {
         if (linesCleared > 0) {
-            // Move the blocks down
             for (let i = 0; i < groundedPieces.length; i++) {
-              let groundedPiece = groundedPieces[i];
-              let groundedBlockY = groundedPiece.y;
-            
-              innerLoop:
-              for (let r = 0; r < linesCleared.length; r++) {
-                if (groundedBlockY < clearedRows[r]) {
-                    groundedPiece.y += linesCleared + r;
-                    break innerLoop;
+                let groundedPiece = groundedPieces[i];
+                let groundedBlockY = groundedPiece.y;
+    
+                for (let r = 0; r < clearedRows.length; r++) {
+                    if (groundedBlockY < clearedRows[r]) {
+                        groundedPieces[i].y++;
+                    }
                 }
-              }
             }
         }   
     }
