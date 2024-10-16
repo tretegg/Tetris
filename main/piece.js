@@ -112,9 +112,7 @@ class Piece {
             newShape.y = this.y;
 
             if (this.collision(newShape) === false) {
-               this.shape = this.shape[0]
-                .map((_, i) => this.shape.map(row => row[i]))
-                .map(row => row.reverse());    
+               this.shape = newShape;   
             }
         } 
         else {
@@ -176,7 +174,7 @@ class Piece {
                 if (row[x] > 0) {  // If there's a block in the falling piece
                     let blockX = shape.x + x;  // Absolute X position of the block
                     let blockY = shape.y + y;  // Absolute Y position of the block
-    
+
                     // Loop through all grounded pieces to check for collisions
                     for (let i = 0; i < groundedPieces.length; i++) {
                         let groundedPiece = groundedPieces[i];  // Access grounded block
@@ -185,13 +183,14 @@ class Piece {
     
                         // Check for a collision between the falling block and the grounded block
                         if (blockX === groundedBlockX && blockY === groundedBlockY) {
-                            if (groundedBlockY === 0) {
+                            if (groundedBlockY <= 2) {
                                 endGame();
+                                return false;
                             }
                             return true;  // Collision detected
                         }
                     }
-                }
+                }   
             }
         }
         return false;  // No collision detected

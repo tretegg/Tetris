@@ -7,6 +7,8 @@ let groundedGrid = Array.from({length: ROWS}, () => Array(COLS).fill(0));
 
 let bag = [0, 1, 2, 3, 4, 5, 6];
 
+let gameOver = false;
+
 let level = 1;
 let score = 0;
 let totalLines = 0;
@@ -29,10 +31,32 @@ ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
  * the initial game state on the canvas.
  */
 function play() {
-    board = new Board(ctx);
-    draw();
+    const { width, height } = ctx.canvas;
 
+    groundedPieces = [];
+
+    groundedGrid = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+
+    bag = [0, 1, 2, 3, 4, 5, 6];
+
+    gameOver = false;
+
+    level = 1;
+    score = 0;
+    totalLines = 0;
+
+    speed = 1000;
+
+    newPosition = {
+        x: 0,
+        y: 0
+    }
+
+    board = new Board(ctx);
     
+    ctx.clearRect(0, 0, width, height);
+
+    draw();
 }
 
 /**
@@ -44,7 +68,18 @@ function play() {
 function draw() {
     const { width, height } = ctx.canvas;
     ctx.clearRect(0, 0, width, height);
-    
+
+    for (let y=0; y<=Math.round(height/30); y++) {
+        for (let x=0; x<=Math.round(width/30); x++) {
+            ctx.beginPath();
+            ctx.rect(x, y, 1, 1);
+            ctx.strokeStyle = "black";
+            if (x > 100) ctx.strokeStyle = "white";
+            ctx.stroke();
+        }
+    }
+
+
     groundedPieces.forEach(block => {
         ctx.fillStyle = block.color;
         ctx.fillRect(block.x, block.y, 1, 1);
@@ -58,7 +93,7 @@ function draw() {
     board.piece.draw();
 }
 
-// TODO: Add a function to check if the game is over
+
 function endGame () {
     console.log('game over');
     play();
@@ -125,7 +160,7 @@ document.addEventListener('keydown', event => {
             draw();
             break;
         case ' ':
-            while (board.piece.grounded === false && board.piece.y != 0) {
+            while (board.piece.grounded === false && gameOver === false) {
                 newPosition = moves[S]({ x: board.piece.x, y: board.piece.y });
                 board.piece.move(newPosition);
             }
@@ -202,10 +237,14 @@ function selectPieceFromBag() {
  * the canvas.
  */
 function lower_piece() {
-    newPosition = moves[S]({ x: board.piece.x, y: board.piece.y });
-    board.piece.move(newPosition);
-    draw();
+    if (gameOver === false) {
+       newPosition = moves[S]({ x: board.piece.x, y: board.piece.y });
+        board.piece.move(newPosition);
+        draw(); 
+    } 
 }
 
 setInterval(lower_piece, speed);
+
+
 
