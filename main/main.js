@@ -87,7 +87,7 @@ function draw() {
 
     
     if (board.piece.grounded === true) {
-      board.piece = new Piece(ctx);
+        board.piece = new Piece(ctx);
     }
 
     board.piece.draw();
@@ -174,9 +174,9 @@ document.addEventListener('keydown', event => {
 // Not working
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space' && e.target === document.getElementById('play-button')) {
-      e.preventDefault();
+        e.preventDefault();
     }
-  });
+});
 
 /**
  * Update the score and level after a piece has been added to the

@@ -1,5 +1,30 @@
 import WebSocket, { WebSocketServer } from 'ws';
 import { ServerEventDataTypes, PlayerData, ServerData, ServerErrorData, ServerInitData, WebsocketServerData } from './types/types';
+import Express from 'express';
+import path from 'path';
+
+const express = Express()
+
+const files = {
+    "/board.js": "/main/board.js",
+    "/constant.js": "/main/constant.js",
+    "/favicon.ico": "/main/favicon.ico",
+    "/": "/main/index.html",
+    "/main.js": "/main/main.js",
+    "/peice.js": "/main/piece.js",
+    "/styles.css": "/main/styles.css"
+}
+
+Object.entries(files).forEach(file => {
+    express.get(file[0], (req, res)=>{
+        console.log("")
+
+        res.sendFile(file[1], {root: path.join(__dirname, "..")})
+        res.status(200)
+    })
+})
+
+express.listen({port: 3000})
 
 const wss = new WebSocketServer({ port: 8080 });
 
