@@ -1,4 +1,18 @@
-class Piece {
+import { COLORS, COLS, ROWS, SHAPES } from "./constants"
+import { endGame, groundedGrid, groundedPieces, selectPieceFromBag, updateScore } from "./main"
+
+export class Piece {
+    ctx: CanvasRenderingContext2D
+    shape_num: number
+    shape: number[][]
+    color: string
+    x: number
+    y: number
+    farthestRightX: number
+    farthestLeftX: number
+    lowestY: number
+    grounded: boolean
+
     /**
      * Constructor for the Piece class.
      * @param {Object} ctx - The canvas context to draw on.
@@ -48,7 +62,9 @@ class Piece {
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
             let newShape = this.shape;
+            // @ts-ignore
             newShape.x = p.x;
+            // @ts-ignore
             newShape.y = p.y;
             if (this.collision(newShape) === false) {
                 this.x = p.x;
@@ -61,7 +77,9 @@ class Piece {
         } 
         else if (p.x != this.x) {
             let newShape = this.shape;
+            // @ts-ignore
             newShape.x = p.x;
+            // @ts-ignore
             newShape.y = p.y;
             if (this.collision(newShape) === false) {
                 this.x = p.x;
@@ -108,7 +126,9 @@ class Piece {
             let newShape = this.shape[0]
             .map((_, i) => this.shape.map(row => row[i])) // Transpose
             .reverse();
+            // @ts-ignore
             newShape.x = this.x;
+            // @ts-ignore
             newShape.y = this.y;
 
             if (this.collision(newShape) === false && this.checkWalls(newShape) === false) {
@@ -173,7 +193,9 @@ class Piece {
             let newShape = this.shape[0]
             .map((_, i) => this.shape.map(row => row[i])) // Transpose
             .reverse();
+            // @ts-ignore
             newShape.x = this.x;
+            // @ts-ignore
             newShape.y = this.y;
     
             if (this.collision(newShape) === false && this.checkWalls(newShape) === false) {
@@ -260,6 +282,7 @@ class Piece {
                 linesCleared++;
 
                 // Clear the blocks from the groundedPieces array
+                // @ts-ignore
                 groundedPieces = groundedPieces.filter(piece => piece.y !== rowIndex);
 
                 // Add the cleared row to the clearedRows array
@@ -300,6 +323,7 @@ class Piece {
      * array and setting the corresponding elements in the matrix to 1.
      */
     refreshGrid() {
+        //@ts-ignore
         groundedGrid = Array(ROWS).fill(0).map(() => Array(COLS).fill(0));
         for (let i = 0; i < groundedPieces.length; i++) {
             let groundedPiece = groundedPieces[i];

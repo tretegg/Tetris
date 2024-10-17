@@ -1,9 +1,13 @@
-const canvas = document.getElementById('board');
+import { A, BLOCK_SIZE, COLS, D, ROWS, S } from "./constants";
+import { Board } from "./board";
+import { Piece } from "./piece";
+
+const canvas = document.getElementById('window.board') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d');
 
-let groundedPieces = [];
+export let groundedPieces = [];
 
-let groundedGrid = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+export let groundedGrid = Array.from({length: ROWS}, () => Array(COLS).fill(0));
 
 let bag = [0, 1, 2, 3, 4, 5, 6];
 
@@ -27,7 +31,7 @@ ctx.canvas.height = ROWS * BLOCK_SIZE;
 ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
 /**
- * Start a new game of Tetris by creating a new Board object and drawing
+ * Start a new game of Tetris by creating a new window.board object and drawing
  * the initial game state on the canvas.
  */
 function play() {
@@ -52,7 +56,7 @@ function play() {
         y: 0
     }
 
-    board = new Board(ctx);
+    window.board = new Board(ctx);
     
     ctx.clearRect(0, 0, width, height);
 
@@ -86,15 +90,15 @@ function draw() {
     });
 
     
-    if (board.piece.grounded === true) {
-        board.piece = new Piece(ctx);
+    if (window.board.piece.grounded === true) {
+      window.board.piece = new Piece(ctx);
     }
 
-    board.piece.draw();
+    window.board.piece.draw();
 }
 
 
-function endGame () {
+export function endGame () {
     console.log('game over');
     play();
 }
@@ -110,59 +114,59 @@ document.addEventListener('keydown', event => {
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
     switch (key) {
         case 'a':
-            newPosition = moves[A]({ x: board.piece.x, y: board.piece.y });
-            board.piece.farthestLeftX = 3;
-            for (let y = 0; y < board.piece.shape.length; y++) {
-                let row = board.piece.shape[y];  // Access each row
+            newPosition = moves[A]({ x: window.board.piece.x, y: window.board.piece.y });
+            window.board.piece.farthestLeftX = 3;
+            for (let y = 0; y < window.board.piece.shape.length; y++) {
+                let row = window.board.piece.shape[y];  // Access each row
                 for (let x = 0; x < row.length; x++) {
-                    if (row[x] > 0 && x < board.piece.farthestLeftX) {  // Check if there's a block at this position
-                        board.piece.farthestLeftX = x;  // Track the furthest x index
+                    if (row[x] > 0 && x < window.board.piece.farthestLeftX) {  // Check if there's a block at this position
+                        window.board.piece.farthestLeftX = x;  // Track the furthest x index
                     }
                 }
             }
-            let farthestLeftInGrid = newPosition.x + board.piece.farthestLeftX;
+            let farthestLeftInGrid = newPosition.x + window.board.piece.farthestLeftX;
             if (farthestLeftInGrid >= 0) {
-                board.piece.move(newPosition);
+                window.board.piece.move(newPosition);
                 draw();
             }
             break;
         case 's':
-            newPosition = moves[S]({ x: board.piece.x, y: board.piece.y });
-            board.piece.move(newPosition);
+            newPosition = moves[S]({ x: window.board.piece.x, y: window.board.piece.y });
+            window.board.piece.move(newPosition);
             draw();  
             break;
         case 'd':
-            newPosition = moves[D]({ x: board.piece.x, y: board.piece.y });
-            board.piece.farthestRightX = -1;
-            for (let y = 0; y < board.piece.shape.length; y++) {
-                let row = board.piece.shape[y];  // Access each row
+            newPosition = moves[D]({ x: window.board.piece.x, y: window.board.piece.y });
+            window.board.piece.farthestRightX = -1;
+            for (let y = 0; y < window.board.piece.shape.length; y++) {
+                let row = window.board.piece.shape[y];  // Access each row
                 for (let x = 0; x < row.length; x++) {
-                    if (row[x] > 0 && x > board.piece.farthestRightX) {  // Check if there's a block at this position
-                        board.piece.farthestRightX = x;  // Track the furthest x index
+                    if (row[x] > 0 && x > window.board.piece.farthestRightX) {  // Check if there's a block at this position
+                        window.board.piece.farthestRightX = x;  // Track the furthest x index
                     }
                 }
             }
-            let farthestRightInGrid = newPosition.x + board.piece.farthestRightX;
+            let farthestRightInGrid = newPosition.x + window.board.piece.farthestRightX;
             if (farthestRightInGrid < COLS) {
-                board.piece.move(newPosition);
+                window.board.piece.move(newPosition);
                 draw();  
-                board.piece.farthestRightX = -1;
+                window.board.piece.farthestRightX = -1;
             }
             break;
         case 'ArrowLeft':
             event.preventDefault();
-            board.piece.rotateCounterClockwise();
+            window.board.piece.rotateCounterClockwise();
             draw();
             break;
         case 'ArrowRight':
             event.preventDefault();
-            board.piece.rotateClockwise();
+            window.board.piece.rotateClockwise();
             draw();
             break;
         case ' ':
-            while (board.piece.grounded === false && gameOver === false) {
-                newPosition = moves[S]({ x: board.piece.x, y: board.piece.y });
-                board.piece.move(newPosition);
+            while (window.board.piece.grounded === false && gameOver === false) {
+                newPosition = moves[S]({ x: window.board.piece.x, y: window.board.piece.y });
+                window.board.piece.move(newPosition);
             }
             draw();
             break;
@@ -174,9 +178,9 @@ document.addEventListener('keydown', event => {
 // Not working
 document.addEventListener('keydown', (e) => {
     if (e.code === 'Space' && e.target === document.getElementById('play-button')) {
-        e.preventDefault();
+      e.preventDefault();
     }
-});
+  });
 
 /**
  * Update the score and level after a piece has been added to the
@@ -186,7 +190,7 @@ document.addEventListener('keydown', (e) => {
  * the new level.
  * @param {number} linesCleared - The number of lines cleared.
  */
-function updateScore(linesCleared) {
+export function updateScore(linesCleared) {
     if (linesCleared === 1) {
         score += 100 * level;
     }
@@ -202,9 +206,9 @@ function updateScore(linesCleared) {
     totalLines += linesCleared;
     level = Math.floor(totalLines / 10) + 1;
     speed = 1000 - level * 30;
-    document.getElementById('score').innerHTML = score;
-    document.getElementById('level').innerHTML = level;
-    document.getElementById('lines').innerHTML = totalLines;
+    document.getElementById('score').innerText = score.toString();
+    document.getElementById('level').innerText = level.toString();
+    document.getElementById('lines').innerText = totalLines.toString();
 }
 
 /**
@@ -215,7 +219,7 @@ function updateScore(linesCleared) {
  *                              different Tetris piece.
  * @returns {number} The index of the selected piece.
  */
-function selectPieceFromBag() {
+export function selectPieceFromBag() {
     if (bag.length === 0) {
         bag = [0, 1, 2, 3, 4, 5, 6];
     }
@@ -238,8 +242,8 @@ function selectPieceFromBag() {
  */
 function lower_piece() {
     if (gameOver === false) {
-       newPosition = moves[S]({ x: board.piece.x, y: board.piece.y });
-        board.piece.move(newPosition);
+       newPosition = moves[S]({ x: window.board.piece.x, y: window.board.piece.y });
+        window.board.piece.move(newPosition);
         draw(); 
     } 
 }
