@@ -6,19 +6,32 @@ import path from 'path';
 const express = Express()
 
 const files = {
-    "/board.js": "/compiled/board.js",
-    "/constant.js": "/compiled/constant.js",
+    "/board.js": "/compiled/main/board.js",
+    "/constant.js": "/compiled/main/constant.js",
     "/favicon.ico": "/main/favicon.ico",
     "/": "/main/index.html",
-    "/main.js": "/compiled/main.js",
-    "/peice.js": "/compiled/piece.js",
+    "/main.js": "/compiled/main/main.js",
+    "/peice.js": "/compiled/main/piece.js",
     "/styles.css": "/main/styles.css"
 }
 
 Object.entries(files).forEach(file => {
+    console.log(file)
     express.get(file[0], (req, res)=>{
         console.log("serving", file[0])
         console.log(path.join(__dirname, "..", ".."))
+        
+        if (file[1].includes("html")) {
+            res.type("html")
+        }
+
+        if (file[1].includes("javascript")) {
+            res.type("text/javascript")
+        }
+
+        if (file[1].includes("css")) {
+            res.type("css")
+        }
 
         res.sendFile(file[1], {root: path.join(__dirname, "..", "..")})
         res.status(200)
