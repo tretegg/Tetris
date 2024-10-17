@@ -106,19 +106,61 @@ class Piece {
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
             let newShape = this.shape[0]
-                .map((_, i) => this.shape.map(row => row[i]))
-                .map(row => row.reverse());
+            .map((_, i) => this.shape.map(row => row[i])) // Transpose
+            .reverse();
             newShape.x = this.x;
             newShape.y = this.y;
 
-            if (this.collision(newShape) === false) {
+            if (this.collision(newShape) === false && this.checkWalls(newShape) === false) {
                this.shape = newShape;   
+            }
+            else {
+                console.log("Invalid rotation");
             }
         } 
         else {
             this.grounded = true;
             this.addToGroundedPieces();
         } 
+    }
+
+
+
+    /**
+     * Check if the given piece collides with the walls of the grid. 
+     * It calculates the farthest left and right positions of the piece in the grid
+     * and verifies if the piece is within the boundaries of the grid.
+     * 
+     * @param {Array} piece - The piece to check for wall collisions.
+     * @returns {boolean} True if there is a collision with the walls, false otherwise.
+     */
+    checkWalls(piece) {
+        let farthestLeftX = 3;
+        for (let y = 0; y < piece.length; y++) {
+            let row = piece[y];  // Access each row
+            for (let x = 0; x < row.length; x++) {
+                if (row[x] > 0 && x < farthestLeftX) {  // Check if there's a block at this position
+                    farthestLeftX = x;  // Track the furthest x index
+                }
+            }
+        }
+        let farthestLeftInGrid = piece.x + farthestLeftX;
+        let farthestRightX = -1;
+        for (let y = 0; y < piece.length; y++) {
+            let row = piece[y];  // Access each row
+            for (let x = 0; x < row.length; x++) {
+                if (row[x] > 0 && x > farthestRightX) {  // Check if there's a block at this position
+                    farthestRightX = x;  // Track the furthest x index
+                }
+            }
+        }
+        let farthestRightInGrid = piece.x + farthestRightX;
+        if (farthestRightInGrid < COLS && farthestLeftInGrid >= 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     /**
@@ -129,14 +171,18 @@ class Piece {
         this.updateLowestY();
         if (this.y + this.lowestY < ROWS - 1) {
             let newShape = this.shape[0]
-                .map((_, i) => this.shape.map(row => row[i])) // Transpose
-                .reverse();
+            .map((_, i) => this.shape.map(row => row[i])) // Transpose
+            .reverse();
             newShape.x = this.x;
             newShape.y = this.y;
     
-            if (this.collision(newShape) === false) {
+            if (this.collision(newShape) === false && this.checkWalls(newShape) === false) {
                 this.shape = newShape;
             }
+            else {
+                console.log("Invalid rotation");
+            }
+
         } else {
             this.grounded = true;
             this.addToGroundedPieces();
