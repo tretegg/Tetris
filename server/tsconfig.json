@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "noEmitOnError": true,
+        "removeComments": true,
+        "sourceMap": true,
+        "target": "ESNext",
+        "moduleResolution": "NodeNext",
+        "outDir": "./compiled",
+        "allowSyntheticDefaultImports": true,
+        "module": "NodeNext",
+        "typeRoots": ["/types", "../main/src/types"]
+    },
+
+    "include": ["**/*"]
+}

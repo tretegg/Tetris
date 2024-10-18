@@ -1,0 +1,22 @@
+{
+  "name": "tertris server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx tsc --watch",
+    "start": "node ./compiled/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.4"
+  },
+  "dependencies": {
+    "@types/ws": "^8.5.12",
+    "express": "^4.21.1",
+    "typescript": "^5.6.2",
+    "ws": "^8.18.0"
+  }
+}
