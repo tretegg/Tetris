@@ -125,7 +125,7 @@ export class Piece {
         if (this.y + this.lowestY < ROWS - 1) {
             let newShape = this.shape[0]
             .map((_, i) => this.shape.map(row => row[i])) // Transpose
-            .reverse();
+            .map(row => row.reverse()); 
             // @ts-ignore
             newShape.x = this.x;
             // @ts-ignore
