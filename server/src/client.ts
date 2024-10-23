@@ -132,3 +132,5 @@ class TetrisNetworkHandler {
 
     
 }
+
+let networkHandler = new TetrisNetworkHandler()
